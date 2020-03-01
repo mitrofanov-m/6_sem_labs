@@ -93,8 +93,53 @@ class Heap:
 
 
 class PriorityQueue:
-    def __init__(self):
-        pass
+    def __init__(self, order=min, collection=[]):
+        self.order = order
+        self.__inited = False
+        self.__TYPE = None
+        collection = list(collection)
+
+        if collection:
+            self.__TYPE = type(collection[0])
+            self.__inited = True
+        for value in collection:
+            self.__check_type(value)
+
+        self.queue = Heap(order, collection)
+
+    def __len__(self):
+        return len(self.queue)
+
+    def peek(self):
+        return self.queue.peek()
+
+    def empty(self):
+        return len(self.queue) == 0
+
+    def qpop(self):
+        return self.queue.hpop()
+
+    def qpush(self, value):
+        if not self.__inited and self.__comprable(value):
+            self.__TYPE = type(value)
+            self.__inited = True
+        else:
+            self.__check_type(value)
+        self.queue.hpush(value)
+
+    def __check_type(self, value):
+        if not isinstance(value, self.__TYPE):
+            raise TypeError("The collection cannot \
+                             contains different types")
+        self.__comprable(value)
+
+    def __comprable(self, value):
+        methods = ["__lt__", "__le__", "__eq__",
+                   "__ne__", "__gt__", "__ge__"]
+        for attr in methods:
+            if not hasattr(value, attr):
+                raise TypeError("Type is not comparable")
+        return True
 
 
 if __name__ == '__main__':
