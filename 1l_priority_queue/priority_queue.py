@@ -93,7 +93,7 @@ class Heap:
 
 
 class PriorityQueue:
-    def __init__(self, order=min, collection=[]):
+    def __init__(self, collection=[], order=min):
         self.order = order
         self.__inited = False
         self.__TYPE = None
@@ -106,6 +106,9 @@ class PriorityQueue:
             self.__check_type(value)
 
         self.queue = Heap(order, collection)
+
+    def __str__(self):
+        return str(self.queue)
 
     def __len__(self):
         return len(self.queue)
@@ -129,8 +132,8 @@ class PriorityQueue:
 
     def __check_type(self, value):
         if not isinstance(value, self.__TYPE):
-            raise TypeError("The collection cannot \
-                             contains different types")
+            raise \
+                TypeError("The collection cannot contains different types")
         self.__comprable(value)
 
     def __comprable(self, value):
@@ -143,7 +146,25 @@ class PriorityQueue:
 
 
 if __name__ == '__main__':
-    heap1 = Heap(list, [4, 5, 1, 2, 8, 0, 9])
-    print(heap1)
-    heap1.hpush(10)
-    print(heap1)
+    q = PriorityQueue((5, 100, -10, 33, 12))
+    print("\nCreate an interger priority queue:")
+    print(f"> {q}")
+    try:
+        to_push = 1
+        print(f"Pushing integer {to_push}:")
+        q.qpush(1)
+        print(f"> {q}")
+        to_push = "Oops!"
+        print(f"Pushing another type value '{to_push}':")
+        q.qpush(to_push)
+    except TypeError as err:
+        print(err.args[0])
+
+    any_q = PriorityQueue()
+    print("\nCreate an optional type priority queue:")
+    print(f"> {any_q}")
+    print(f"Type of queue is: {any_q._PriorityQueue__TYPE}")
+    print(f"Appending float value:")
+    any_q.qpush(3.45)
+    print(f"> {any_q}")
+    print(f"Type of queue is: {any_q._PriorityQueue__TYPE}")
