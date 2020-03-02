@@ -24,11 +24,11 @@ class Heap:
     def empty(self):
         return len(self.__heap) == 0
 
-    def hpush(self, value):
+    def push(self, value):
         self.__heap.append(value)
         self._sift_up(len(self.__heap) - 1)
 
-    def hpop(self):
+    def pop(self):
         heap = self.__heap
         if heap:
             first = heap[0]
@@ -95,7 +95,7 @@ class Heap:
                 current = _swapped
 
 
-class PriorityQueue:
+class PriorityQueue(Heap):
     def __init__(self, collection=[], order=min):
         self.__TYPE = None
         collection = list(collection)
@@ -105,33 +105,18 @@ class PriorityQueue:
         for value in collection:
             self._check_type(value)
 
-        self.__queue = Heap(order, collection)
+        super().__init__(order, collection)
 
     # Public Methods Section #
-    def __str__(self):
-        return str(self.__queue)
-
-    def __len__(self):
-        return len(self.__queue)
-
-    def peek(self):
-        return self.__queue.peek()
-
     def get_type(self):
         return self.__TYPE
 
-    def empty(self):
-        return len(self.__queue) == 0
-
-    def qpop(self):
-        return self.__queue.hpop()
-
-    def qpush(self, value):
+    def push(self, value):
         if self.__TYPE is None and self._comprable(value):
             self.__TYPE = type(value)
         else:
             self._check_type(value)
-        self.__queue.hpush(value)
+        super().push(value)
 
     # Private Methods Section #
     def _check_type(self, value):
@@ -156,11 +141,11 @@ if __name__ == '__main__':
     try:
         to_push = 1
         print(f"Pushing integer {to_push}:")
-        q.qpush(1)
+        q.push(1)
         print(f"> {q}")
         to_push = "Oops!"
         print(f"Pushing another type value '{to_push}':")
-        q.qpush(to_push)
+        q.push(to_push)
     except TypeError as err:
         print(err.args[0])
 
@@ -169,6 +154,6 @@ if __name__ == '__main__':
     print(f"> {any_q}")
     print(f"Type of queue is: {any_q.get_type()}")
     print(f"Appending float value:")
-    any_q.qpush(3.45)
+    any_q.push(3.45)
     print(f"> {any_q}")
     print(f"Type of queue is: {any_q.get_type()}")
