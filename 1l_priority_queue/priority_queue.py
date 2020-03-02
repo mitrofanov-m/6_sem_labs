@@ -11,13 +11,13 @@ class Heap:
         if self.__heap:
             self._heapify()
 
-    # Public Methods Section #
     def __str__(self):
         return str(self.__heap)
 
     def __len__(self):
         return len(self.__heap)
 
+    # Public Methods Section #
     def peek(self):
         return self.__heap[0]
 
@@ -79,20 +79,20 @@ class Heap:
         while self._left_child_of(current) < size:
             left_child = self._left_child_of(current)
             right_child = self._right_child_of(current)
-            _swapped = current
+            swapped = current
 
-            if not in_order(heap[_swapped], heap[left_child]):
-                _swapped = left_child
+            if not in_order(heap[swapped], heap[left_child]):
+                swapped = left_child
 
             if right_child < size and \
-                    not in_order(heap[_swapped], heap[right_child]):
-                _swapped = right_child
+                    not in_order(heap[swapped], heap[right_child]):
+                swapped = right_child
 
-            if _swapped == current:
+            if swapped == current:
                 return
             else:
-                self._swap(current, _swapped)
-                current = _swapped
+                self._swap(current, swapped)
+                current = swapped
 
 
 class PriorityQueue(Heap):
