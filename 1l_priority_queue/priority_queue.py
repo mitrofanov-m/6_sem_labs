@@ -1,8 +1,10 @@
 
 class Heap:
 
+    _orders = [min, max]
+
     def __init__(self, order, heap=[]):
-        if order not in (min, max):
+        if order not in self._orders:
             raise NameError("Incorrect order. Use 'min' or 'max'.")
 
         self.__heap = heap
@@ -93,6 +95,10 @@ class Heap:
             else:
                 self._swap(current, swapped)
                 current = swapped
+
+    @classmethod
+    def add_order(cls, new_order):
+        cls._orders.append(new_order)
 
 
 class PriorityQueue(Heap):

@@ -1,4 +1,11 @@
-from priority_queue import PriorityQueue
+from priority_queue import *
+
+
+def max_len_order(first_str, second_str):
+    if len(first_str) >= len(second_str):
+        return first_str
+    else:
+        return second_str
 
 
 q = PriorityQueue((5, 100, -10, 33, 12))
@@ -23,3 +30,7 @@ print(f"Appending float value:")
 any_q.push(3.45)
 print(f"> {any_q}")
 print(f"Type of queue is: {any_q.get_type()}")
+
+print(PriorityQueue.add_order(max_len_order))
+str_q = PriorityQueue(["leeeeeeeen", "hi", "wooooooooooooooow"], max_len_order)
+print(f"> {str_q}")
