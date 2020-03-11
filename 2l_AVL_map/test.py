@@ -9,3 +9,6 @@ tree.insert(8)
 tree.insert(9)
 tree.insert(-1)
 print(tree)
+
+tree.remove(7)
+print(tree)

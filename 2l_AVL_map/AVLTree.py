@@ -5,12 +5,12 @@ class Node:
         self.left = None
         self.right = None
 
-    # thanks to classmate for this feature
+    # thanks to groupmate for this feature
     def __str__(self):
         return self.diagram(self, "", "", "")
 
     def diagram(self, node, top, root, bottom):
-        if not node:
+        if node is None:
             return root + "nil\n"
         if node.left is None and node.right is None:
             return root + " " + str(node.value) + "\n"
@@ -35,6 +35,13 @@ class BinaryTree:
     def contains(self, value):
         return self._contains_in(self.__root, value)
 
+    def remove(self, value):
+        if self.contains(value):
+            self.__count -= 1
+            self.__root = self._remove(value, self.__root)
+            return True
+        return False
+
     def remove_all(self):
         self._post_order_removing()
         self.__count = 0
@@ -46,7 +53,7 @@ class BinaryTree:
 
     # Private Methods Section #
     def _insert_in(self, node, value):
-        if not node:
+        if node is None:
             self.__count += 1
             return self.__Node(value)
         elif value < node.value:
@@ -57,7 +64,7 @@ class BinaryTree:
         return node
 
     def _contains_in(self, node, value):
-        if not node:
+        if node is None:
             return False
         elif value < node.value:
             return self._contains_in(node.left, value)
@@ -66,14 +73,39 @@ class BinaryTree:
         else:
             return True
 
+    def _remove(self, value, node):
+        if node is None:
+            return None
+
+        if value == node.value:
+            if node.left is None:
+                return node.right
+
+            elif node.right is None:
+                return node.left
+
+            child = node.left
+            while child.right:
+                child = child.right
+
+            node.value = child.value
+            node.left = self._remove(node.value, node.left)
+
+        elif value < node.value:
+            node.left = self._remove(value, node.left)
+        else:
+            node.right = self._remove(value, node.right)
+
+        return node
+
     def _in_order(self, node, traverse_list):
-        if node:
+        if node is not None:
             self._in_order(node.left, traverse_list)
             traverse_list.append(node.value)
             self._in_order(node.right, traverse_list)
 
     def _post_order_removing(self, node):
-        if node:
+        if node is not None:
             node.left = self._post_order_removing(node.left)
             node.right = self._post_order_removing(node.right)
             node.value = None
@@ -96,8 +128,15 @@ class AVLTree(BinaryTree):
         # append balancing of node that is returned
         return self._balanced(node)
 
+    def _remove(self, node, value):
+        node = super()._remove(node, value)
+        # append balancing of node that is returned
+        if node is not None:
+            return self._balanced(node)
+
+
     def _get_height(self, node):
-        if not node:
+        if node is None:
             return -1
 
         return node.height
@@ -127,7 +166,7 @@ class AVLTree(BinaryTree):
         return pivot
 
     def _get_balance(self, node):
-        if not node:
+        if node is None:
             return 0
         return self._get_height(node.right) - self._get_height(node.left)
 
