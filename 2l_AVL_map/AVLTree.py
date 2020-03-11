@@ -28,15 +28,23 @@ class BinaryTree:
     def __str__(self):
         return str(self.__root)
 
+    def __len__(self):
+        return self.__count
+
+    def __contains__(self, value):
+        return self._contains_in(self.__root, value)
+
+    def __iter__(self):
+        if self.__root is not None:
+            for value in self._in_order(self.__root):
+                yield value
+
     # Public Methods Section #
     def insert(self, value):
         self.__root = self._insert_in(self.__root, value)
 
-    def contains(self, value):
-        return self._contains_in(self.__root, value)
-
     def remove(self, value):
-        if self.contains(value):
+        if value in self:
             self.__count -= 1
             self.__root = self._remove(value, self.__root)
             return True
@@ -45,11 +53,6 @@ class BinaryTree:
     def remove_all(self):
         self._post_order_removing()
         self.__count = 0
-
-    def in_order(self):
-        traverse_list = []
-        self._in_order(self.__root, traverse_list)
-        return traverse_list
 
     # Private Methods Section #
     def _insert_in(self, node, value):
@@ -98,11 +101,16 @@ class BinaryTree:
 
         return node
 
-    def _in_order(self, node, traverse_list):
-        if node is not None:
-            self._in_order(node.left, traverse_list)
-            traverse_list.append(node.value)
-            self._in_order(node.right, traverse_list)
+    def _in_order(self, node):
+        if node.left:
+            for value in self.inorder(node.left):
+                yield value
+
+        yield node.value
+
+        if node.right:
+            for value in self.inorder(node.right):
+                yield value
 
     def _post_order_removing(self, node):
         if node is not None:
