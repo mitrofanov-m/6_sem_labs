@@ -43,7 +43,7 @@ class BinaryTree:
 
     # Public Methods Section #
     def is_empty(self):
-        return self.root is None
+        return self.__root is None
 
     def insert(self, item):
         self.__root = self._insert_in(self.__root, item)

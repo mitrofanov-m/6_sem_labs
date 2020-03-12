@@ -28,4 +28,4 @@ mmap[0] = "hello"
 
 del mmap[0]
 print(mmap[2])
-print(mmap)
+print(mmap.is_empty())
