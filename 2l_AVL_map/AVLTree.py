@@ -1,7 +1,7 @@
 
 class Node:
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, item):
+        self.item = item
         self.left = None
         self.right = None
 
@@ -13,9 +13,9 @@ class Node:
         if node is None:
             return root + "nil\n"
         if node.left is None and node.right is None:
-            return root + " " + str(node.value) + "\n"
+            return root + " " + str(node.item) + "\n"
         return self.diagram(node.right, top + " ", top + "┌──", top + "│ ") + \
-               root + str(node.value) + "\n" + \
+               root + str(node.item) + "\n" + \
                self.diagram(node.left, bottom + "│ ", bottom + "└──", bottom + " ")
 
 
@@ -31,22 +31,27 @@ class BinaryTree:
     def __len__(self):
         return self.__count
 
-    def __contains__(self, value):
-        return self._contains_in(self.__root, value)
+    def __contains__(self, item):
+        if self._get_node_by_item(self.__root, item) is None:
+            return False
+        return True
 
     def __iter__(self):
         if self.__root is not None:
-            for value in self._in_order(self.__root):
-                yield value
+            for item in self._in_order(self.__root):
+                yield item
 
     # Public Methods Section #
-    def insert(self, value):
-        self.__root = self._insert_in(self.__root, value)
+    def is_empty(self):
+        return self.root is None
 
-    def remove(self, value):
-        if value in self:
+    def insert(self, item):
+        self.__root = self._insert_in(self.__root, item)
+
+    def remove(self, item):
+        if item in self:
             self.__count -= 1
-            self.__root = self._remove(value, self.__root)
+            self.__root = self._remove(item, self.__root)
             return True
         return False
 
@@ -55,32 +60,33 @@ class BinaryTree:
         self.__count = 0
 
     # Private Methods Section #
-    def _insert_in(self, node, value):
+    def _insert_in(self, node, item):
         if node is None:
             self.__count += 1
-            return self.__Node(value)
-        elif value < node.value:
-            node.left = self._insert_in(node.left, value)
+            return self.__Node(item)
+        elif item < node.item:
+            node.left = self._insert_in(node.left, item)
         else:
-            node.right = self._insert_in(node.right, value)
+            node.right = self._insert_in(node.right, item)
 
         return node
 
-    def _contains_in(self, node, value):
+    def _get_node_by_item(self, node, item):
+        """ Used in __contains__ """
         if node is None:
-            return False
-        elif value < node.value:
-            return self._contains_in(node.left, value)
-        elif value > node.value:
-            return self._contains_in(node.right, value)
+            return None
+        elif item < node.item:
+            return self._get_node_by_item(node.left, item)
+        elif item > node.item:
+            return self._get_node_by_item(node.right, item)
         else:
-            return True
+            return node
 
-    def _remove(self, value, node):
+    def _remove(self, item, node):
         if node is None:
             return None
 
-        if value == node.value:
+        if item == node.item:
             if node.left is None:
                 return node.right
 
@@ -91,38 +97,38 @@ class BinaryTree:
             while child.right:
                 child = child.right
 
-            node.value = child.value
-            node.left = self._remove(node.value, node.left)
+            node.item = child.item
+            node.left = self._remove(node.item, node.left)
 
-        elif value < node.value:
-            node.left = self._remove(value, node.left)
+        elif item < node.item:
+            node.left = self._remove(item, node.left)
         else:
-            node.right = self._remove(value, node.right)
+            node.right = self._remove(item, node.right)
 
         return node
 
     def _in_order(self, node):
         if node.left:
-            for value in self.inorder(node.left):
-                yield value
+            for item in self._in_order(node.left):
+                yield item
 
-        yield node.value
+        yield node.item
 
         if node.right:
-            for value in self.inorder(node.right):
-                yield value
+            for item in self._in_order(node.right):
+                yield item
 
     def _post_order_removing(self, node):
         if node is not None:
             node.left = self._post_order_removing(node.left)
             node.right = self._post_order_removing(node.right)
-            node.value = None
+            node.item = None
         return None
 
 
 class AVLNode(Node):
-    def __init__(self, value):
-        super().__init__(value)
+    def __init__(self, item):
+        super().__init__(item)
         self.height = 1
 
 
@@ -131,13 +137,13 @@ class AVLTree(BinaryTree):
         super().__init__(AVLNode)
 
     # Private Methods Section #
-    def _insert_in(self, node, value):
-        node = super()._insert_in(node, value)
+    def _insert_in(self, node, item):
+        node = super()._insert_in(node, item)
         # append balancing of node that is returned
         return self._balanced(node)
 
-    def _remove(self, node, value):
-        node = super()._remove(node, value)
+    def _remove(self, node, item):
+        node = super()._remove(node, item)
         # append balancing of node that is returned
         if node is not None:
             return self._balanced(node)
