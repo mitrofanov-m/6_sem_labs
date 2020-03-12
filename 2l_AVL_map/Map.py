@@ -38,8 +38,14 @@ class Map(AVLTree):
             for item in last_map:
                 self.insert(item)
 
+    def __str__(self):
+        inorder = []
+        for i in self:
+            inorder.append(i)
+        return str(inorder)
+
     def __getitem__(self, key):
-        node = self._get_node_by_item(self.__root, key)
+        node = self._get_node_by_item(self._BinaryTree__root, key)
         if node is None:
             raise KeyError("Incorrect key") 
 
@@ -65,10 +71,6 @@ class Map(AVLTree):
             raise KeyError("Incorrect key")
 
     # Private Methods Section #
-    def insert(self, item):
-        """ Overrided and used as private """
-        super().insert(item)
-
     def _check_type(self, item):
         if not isinstance(item.value, self.__VALTYPE) or \
            not isinstance(item.key, self.__KEYTYPE):

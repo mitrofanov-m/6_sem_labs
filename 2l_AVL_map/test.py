@@ -27,8 +27,5 @@ mmap[2] = "friend"
 mmap[0] = "hello"
 
 del mmap[0]
-inorder = []
-for i in mmap:
-    inorder.append(i)
-
-print(inorder)
+print(mmap[2])
+print(mmap)
