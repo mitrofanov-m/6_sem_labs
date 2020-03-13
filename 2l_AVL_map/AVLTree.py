@@ -56,7 +56,7 @@ class BinaryTree:
         return False
 
     def remove_all(self):
-        self._post_order_removing()
+        self.__root = self._post_order_removing(self.__root)
         self.__count = 0
 
     # Private Methods Section #
@@ -129,12 +129,17 @@ class BinaryTree:
 class AVLNode(Node):
     def __init__(self, item):
         super().__init__(item)
-        self.height = 1
+        self.height = 0
 
 
 class AVLTree(BinaryTree):
     def __init__(self):
         super().__init__(AVLNode)
+
+    # Public Methods Section #
+    def get_height(self):
+        return self._get_height(self._BinaryTree__root)
+
 
     # Private Methods Section #
     def _insert_in(self, node, item):
