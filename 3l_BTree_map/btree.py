@@ -55,9 +55,10 @@ class Btree:
 
         if node.leaf:
             node.keys.append(key)
-            while i > 0 and key < node.keys[i]:
+            while i >= 0 and key < node.keys[i]:
+                node.keys[i+1], node.keys[i] = node.keys[i], node.keys[i+1]
                 i -= 1
-            node.keys[-1], node.keys[i] = node.keys[i], node.keys[-1]
+            
         else:
             while i > 0 and key < node.keys[i]:
                 i -= 1
