@@ -8,6 +8,9 @@ class BNode:
     def __len__(self):
         return len(self.keys)
 
+    def __str__(self):
+        return str(self.keys)
+
     def is_empty(self):
         return len(keys) == 0
 
@@ -19,6 +22,17 @@ class Btree:
         self._t = t
         self._count = 0
         self._root = BNode(leaf=True)
+
+    def __len__(self):
+        return self._count
+
+    def __str__(self):
+        result = ''
+        result += str(self._root) + '\n'
+        for i, child in enumerate(self._root.children):
+            result += f'child[{i}] = {str(child)}\n'
+
+        return result
 
     def is_empty(self):
         return len(_root) == 0
@@ -60,11 +74,11 @@ class Btree:
                 i -= 1
             
         else:
-            while i > 0 and key < node.keys[i]:
+            while i >= 0 and key < node.keys[i]:
                 i -= 1
             i += 1
             if self._correct(node.children[i]) is False:
-                self._split_child(node, i)
+                self._split_child_of(node, i)
                 if key > node.keys[i]:  
                     i += 1
 
@@ -81,5 +95,4 @@ class Btree:
             self._insert_into_nonfull(self._root, key)
         else:
             self._insert_into_nonfull(self._root, key)
-
 
