@@ -1,7 +1,7 @@
 # TODO
-# - binary_search
-# - get_key
-#
+# + _binary_search
+# + get_key
+# 
 
 
 class BNode:
@@ -33,33 +33,27 @@ class Btree:
         return self._count
 
     def __str__(self):
-        result = ''
-        result += str(self._root) + '\n'
-        for i, child in enumerate(self._root.children):
-            result += f'child[{i}] = {str(child)}\n'
-
-        return result
-
-    #def __str__(self):
-    #    inorder = []
-    #    for i in self:
-    #        inorder.append(i)
-    #    return str(inorder)
+        inorder = []
+        for i in self:
+            inorder.append(i)
+        return str(inorder)
 
     def __iter__(self):
         for i in self._in_order(self._root):
             yield i
 
     def __contains__(self, key):
-        return self._get_bkey(self._root, key) is not False
+        _, result = self._get_bkey(key)
+        return result
+
 
     # Public Methods Section #
     def is_empty(self):
-        return len(_root) == 0
+        return self._count == 0
 
     def insert(self, key):
         self._count += 1
-        if self._correct(self._root) is False:
+        if self._incorrect(self._root):
             self._height +=1
             new_root = BNode()
             new_root.leaf = False
@@ -69,16 +63,34 @@ class Btree:
         
         self._insert_into_nonfull(self._root, key)
 
+    def remove_all(self):
+        self._count = 0
+        self._height = 0
+        self._root = BNode(leaf=True)
+
+
     # Private Methods Section #
-    def _correct(self, node):
+    def _incorrect(self, node):
         t = self._t
-        result = True
+        result = False
         if len(node) < t - 1:
-            result = False if self._root != node else True
+            result = True if self._root != node else False
         if len(node) >= t * 2 - 1:
-            result = False
+            result = True
 
         return result
+
+    def _get_bkey(self, key):
+        node = self._root
+        while True:
+            i, contains = self._search(node.keys, key)
+            
+            if contains:
+                return node.keys[i-1], True
+            elif node.leaf:
+                return None, False
+            else:
+                node = node.children[i]
 
     def _split_child_of(self, parent, child_index):
         new_child = BNode()
@@ -98,34 +110,18 @@ class Btree:
         parent.children.insert(child_index + 1, new_child)
 
     def _insert_into_nonfull(self, node, key):
-        i = len(node) - 1
-        # TODO binary search
+        i, _ = self._search(node.keys, key)
         if node.leaf:
-            #if len(node) > 0:
-            i, _ = self._search(node.keys, key)
-                #if key > node.keys[-1]:
-                #    i = len(node)
-            node.keys.insert(i, key)
-            #node.keys.append(key)
-            #while i >= 0 and key < node.keys[i]:
-            #    node.keys[i+1], node.keys[i] = node.keys[i], node.keys[i+1]
-            #    i -= 1
-            
+            node.keys.insert(i, key)    
         else:
-            i, _ = self._search(node.keys, key)
-            #if key < node.keys[0]:
-            #    i = -1
-            #while i >= 0 and key < node.keys[i]:
-            #    i -= 1
-            #i += 1
-            if self._correct(node.children[i]) is False:
+            if self._incorrect(node.children[i]):
                 self._split_child_of(node, i)
                 if key > node.keys[i]:
                     i += 1
 
             self._insert_into_nonfull(node.children[i], key)
 
-    def binary_search(self, keys, key):
+    def _binary_search(self, keys, key):
         left, right = 0, len(keys) - 1
         middle = 0
         while left <= right:
@@ -139,7 +135,7 @@ class Btree:
         return middle, False
 
     def _search(self, keys, key):
-        i, contains = self.binary_search(keys, key)
+        i, contains = self._binary_search(keys, key)
         while i < len(keys) and key >= keys[i]:
             i += 1
 
