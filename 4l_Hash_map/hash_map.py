@@ -42,10 +42,10 @@ class HashMap:
 
     @load_factor.setter
     def load_factor(self, load_factor):
-        self._load_factor = load_factor if load_factor > 0.2 else 0.2
+        self._load_factor = load_factor if load_factor > 0.5 else 0.5
 
         if self.load >= self._load_factor:
-             self._rehashing(2 * len(self._buckets) + 1)
+             self._rehashing_to(2 * len(self._buckets) + 1)
 
 
     # Magic Methods Section #
@@ -86,7 +86,7 @@ class HashMap:
             self._length += 1
 
             if self.load >= self._load_factor:
-                self._rehashing(2 * len(self._buckets) + 1)
+                self._rehashing_to(2 * len(self._buckets) + 1)
 
     def __delitem__(self, key):
         if isinstance(key, self.__KEYTYPE):
@@ -103,6 +103,11 @@ class HashMap:
         for bucket in self._buckets:
             bucket.clear()
         self._length = 0
+
+    def compress(self):
+        optimal_load = self.load_factor - 0.2
+        optimal_num = round(self._length / optimal_load)
+        self._rehashing_to(optimal_num)
 
     # Private Methods Section #
     def _rehashing_to(self, num):
