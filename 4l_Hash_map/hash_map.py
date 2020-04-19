@@ -1,5 +1,4 @@
 from functools import total_ordering
-# TODO: init from last_map
 # TODO: _rehashing
 
 @total_ordering
@@ -23,40 +22,43 @@ class MapItem:
 
 
 class HashMap:
-    def __init__(self, last_map=None, load_factor=2.0, hfunc=hash):
-        # TODO: init from last_map
-        self.hash = hfunc
-        self._length = 0
-        self.buckets = [list() for i in range(2 * self.length + 5)]
-        self.load_factor = load_factor
+    def __init__(self, load_factor=2.0, hfunc=hash, length=0):
+        self._hash = hfunc
+        self._length = length
+        self._buckets = [list() for i in range(2 * self._length + 5)]
+        self._load_factor = load_factor
 
         self.__KEYTYPE = None
         self.__VALTYPE = None
 
-        #if type(last_map) is HashMap:
-        #    self.__KEYTYPE = last_map._Map__KEYTYPE
-        #    self.__VALTYPE = last_map._Map__VALTYPE
-
-            # for item in last_map:
-            #     self.insert(item)
-
-    # Properties Section
+    # Properties Section #
     @property
     def load(self):
-        return self._length / len(self.buckets)
+        return round(self._length / len(self._buckets), 3)
 
     @property
     def load_factor(self):
-        return self.load_factor
+        return self._load_factor
 
     @load_factor.setter
     def load_factor(self, load_factor):
-        self.load_factor = load_factor if load_factor > 0.2 else 0.2
+        self._load_factor = load_factor if load_factor > 0.2 else 0.2
+
+        if self.load >= self._load_factor:
+             self._rehashing(2 * len(self._buckets) + 1)
 
 
-    # Magic Methods Section
+    # Magic Methods Section #
+    def __repr__(self):
+        return str(self._buckets)
+
     def __len__(self):
         return self._length
+
+    def __iter__(self):
+        for bucket in self._buckets:
+            for item in bucket:
+                yield item
 
     def __getitem__(self, key):
         bucket = self._bucket_of(key)
@@ -73,18 +75,18 @@ class HashMap:
             self.__VALTYPE = type(new_item.value)
         else:
             self._check_types_of(new_item)
-            bucket = self._bucket_of(key)
-            for item in bucket:
-                if item == key:
-                    item.value = value
-                    break
-            else:
-                bucket.append(new_item)
-                self._length += 1
 
-                if self.load >= self.load_factor:
-                    # TODO: _rehashing
-                    # self._rehashing(2 * self.number_of_lists + 1)
+        bucket = self._bucket_of(key)
+        for item in bucket:
+            if item == key:
+                item.value = value
+                break
+        else:
+            bucket.append(new_item)
+            self._length += 1
+
+            if self.load >= self._load_factor:
+                self._rehashing(2 * len(self._buckets) + 1)
 
     def __delitem__(self, key):
         if isinstance(key, self.__KEYTYPE):
@@ -96,10 +98,25 @@ class HashMap:
                     return
         raise KeyError("Incorrect key")
 
+    # Public Methods Section #
+    def remove_all(self):
+        for bucket in self._buckets:
+            bucket.clear()
+        self._length = 0
+
     # Private Methods Section #
-    def _bucket_of(self, key):
-        index = self.hash(key) % len(self.buckets)
-        return self.buckets[index]
+    def _rehashing_to(self, num):
+        new_buckets = [list() for i in range(num)]
+        for item in self:
+            bucket = self._bucket_of(item.key, buckets=new_buckets)
+            bucket.append(item)
+
+        self._buckets = new_buckets
+
+    def _bucket_of(self, key, buckets=None):
+        _buckets = buckets or self._buckets
+        index = self._hash(key) % len(_buckets)
+        return _buckets[index]
 
     def _check_types_of(self, item):
         if not isinstance(item.value, self.__VALTYPE) or \
