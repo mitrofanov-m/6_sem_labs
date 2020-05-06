@@ -1,3 +1,5 @@
+from graph_1 import *
+
 
 class bcolors:
     HEADER = '\033[95m'
@@ -29,7 +31,8 @@ if __name__ == "__main__":
         \r 0 -- 1 - 2
         \r |    | /
         \r 3 -- 4 - 5'''
-    # use list indexes as names of vertices
+
+    # use list indexes as names of vertices and lists as nearest neighbors
     graph = [[1, 3],        # 0
              [0, 2, 4],     # 1
              [1, 4],        # 2
@@ -43,3 +46,30 @@ if __name__ == "__main__":
     print('DFS')
     result = dfs(graph, 0)
     print_g(g_str, result)
+
+
+    g_str = '''
+        \r 0 -(4)- 1 -(1)- 2
+        \r |       |     /
+        \r(11)    (3) (7)
+        \r |       | /
+        \r 3 -(2)- 4 -(2)- 5'''
+
+    # use list of lists as matrix
+    graph = [[0, 4, 0,11, 0, 0], # 0
+             [4, 0, 1, 0, 3, 0], # 1
+             [0, 1, 0, 0, 7, 0], # 2
+             [11,0, 0, 0, 2, 0], # 3
+             [0, 3, 7, 2, 0, 2], # 4
+             [0, 0, 0, 0, 2, 0]] # 5
+
+    result = dijkstra(graph, 0)
+    print('edge len')
+    for i, _ in enumerate(result):
+        print(f'{i} -    {result[i]}')
+
+    result = floyd_warshall(graph)
+    for distance in result:
+        print(distance)
+
+        
