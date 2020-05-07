@@ -37,12 +37,11 @@ def min_weight(distance, visited):
     return min_index
 
 def dijkstra(graph, first_edge):
-
         visited = [False] * len(graph)
         distance = [inf] * len(graph)
         distance[first_edge] = 0
 
-        for cout in range(len(graph)):
+        for tmp in range(len(graph)):
 
             u = min_weight(distance, visited)
             visited[u] = True
@@ -75,21 +74,43 @@ def floyd_warshall(graph):
     return distance
 
 
-def kruskal(edges, nodes_num):
-
-    edges = sorted(edges, key=lambda edge: edge[2])
+def kruskal_mst(graph, nodes_num):
+    graph = sorted(graph, key=lambda edge: edge[2])
     parent = list(range(nodes_num))
     mst = []
-
+    
     def parent_of(i):
         if i != parent[i]:
             parent[i] = parent_of(parent[i])
         return parent[i]
 
-    for edge in edges:
+    for edge in graph:
         a, b = parent_of(edge[0]), parent_of(edge[1])
         if a != b:
             mst.append(edge)
             parent[a] = b
 
     return mst
+
+def prim_mst(graph):
+    visited = [False] * len(graph)
+    distance = [inf] * len(graph)
+    parent = [None] * len(graph)
+    n = len(graph)
+
+    distance[0] = 0
+    parent[0] = -1
+
+    for _ in range(n):
+
+        u = min_weight(distance, visited)
+        visited[u] = True
+
+        for v in range(n):
+            if graph[u][v] > 0 and not visited[v] and distance[v] > graph[u][v]:
+                    distance[v] = graph[u][v]
+                    parent[v] = u
+    result = []
+    for i in range(1, n):
+        result.append((parent[i], i, graph[i][parent[i]]))
+    return result

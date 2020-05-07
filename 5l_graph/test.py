@@ -59,8 +59,8 @@ if __name__ == "__main__":
     graph = [[0, 4, 0, 9, 0, 0], # 0
              [4, 0, 1, 0, 3, 0], # 1
              [0, 1, 0, 0, 7, 0], # 2
-             [9 ,0, 0, 0, 2, 0], # 3
-             [0, 3, 7, 2, 0, 2], # 4
+             [9 ,0, 0, 0, 1, 0], # 3
+             [0, 3, 7, 1, 0, 2], # 4
              [0, 0, 0, 0, 2, 0]] # 5
 
     result = dijkstra(graph, 0)
@@ -72,6 +72,10 @@ if __name__ == "__main__":
     for distance in result:
         print(distance)
 
+    result = prim_mst(graph)
+    print('Prim mst:')
+    for edge in result:
+        print(edge)
 
     graph = [(0, 1, 4),
              (0, 3, 9),
@@ -85,10 +89,8 @@ if __name__ == "__main__":
     for edge in graph:
         print(edge)
 
-    result = kruskal(graph, nodes_num=6)
+    result = kruskal_mst(graph, nodes_num=6)
 
     print("mst:")
     for edge in result:
         print(edge)
-
-    
