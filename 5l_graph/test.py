@@ -39,11 +39,14 @@ if __name__ == "__main__":
              [0, 4],        # 3
              [1, 3, 2, 5],  # 4
              [4]]           # 5
-    print('BFS')
+
+    print('--------------- Graph search algorithms ---------------------- ')
+
+    print('1. BFS')
     result = bfs(graph, 0)
     print_g(g_str, result)
 
-    print('DFS')
+    print('2. DFS')
     result = dfs(graph, 0)
     print_g(g_str, result)
 
@@ -63,21 +66,22 @@ if __name__ == "__main__":
              [0, 3, 7, 1, 0, 2], # 4
              [0, 0, 0, 0, 2, 0]] # 5
 
+    print()
+    print('--------------- Shortest path problem ---------------------- ')
     result = dijkstra(graph, 0)
-    print('edge len')
-    for i, _ in enumerate(result):
-        print(f'{i} -    {result[i]}')
+    print('1. Dijkstra:')
+    print('0 - ', result)
+    print()
 
     result = floyd_warshall(graph)
-    for distance in result:
-        print(distance)
+    print('2. Floyd Warshall:')
+    for i, distance in enumerate(result):
+        print(i, ' - ', distance)
+    print()
 
-    result = prim_mst(graph)
-    print('Prim mst:')
-    for edge in result:
-        print(edge)
 
-    graph = [(0, 1, 4),
+    print('--------------- Minimum Spanning Tree ---------------------- ')
+    graph1 = [(0, 1, 4),
              (0, 3, 9),
              (1, 2, 1),
              (1, 4, 3),
@@ -86,11 +90,16 @@ if __name__ == "__main__":
              (4, 5, 2)]
 
     print('before:')
-    for edge in graph:
+    for edge in graph1:
         print(edge)
 
-    result = kruskal_mst(graph, nodes_num=6)
+    result = prim_mst(graph)
+    print('1. Prim:')
+    for edge in result:
+        print(edge)
 
-    print("mst:")
+    result = kruskal_mst(graph1, nodes_num=6)
+
+    print("2. Kruskal:")
     for edge in result:
         print(edge)
