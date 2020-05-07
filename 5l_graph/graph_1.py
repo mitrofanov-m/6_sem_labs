@@ -73,3 +73,23 @@ def floyd_warshall(graph):
                 distance[i][j] = min(distance[i][j],
                                  distance[i][k]+ distance[k][j])
     return distance
+
+
+def kruskal(edges, nodes_num):
+
+    edges = sorted(edges, key=lambda edge: edge[2])
+    parent = list(range(nodes_num))
+    mst = []
+
+    def parent_of(i):
+        if i != parent[i]:
+            parent[i] = parent_of(parent[i])
+        return parent[i]
+
+    for edge in edges:
+        a, b = parent_of(edge[0]), parent_of(edge[1])
+        if a != b:
+            mst.append(edge)
+            parent[a] = b
+
+    return mst

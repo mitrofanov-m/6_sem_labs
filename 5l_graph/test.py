@@ -51,15 +51,15 @@ if __name__ == "__main__":
     g_str = '''
         \r 0 -(4)- 1 -(1)- 2
         \r |       |     /
-        \r(11)    (3) (7)
+        \r(9)     (3) (7)
         \r |       | /
-        \r 3 -(2)- 4 -(2)- 5'''
+        \r 3 -(1)- 4 -(2)- 5'''
 
     # use list of lists as matrix
-    graph = [[0, 4, 0,11, 0, 0], # 0
+    graph = [[0, 4, 0, 9, 0, 0], # 0
              [4, 0, 1, 0, 3, 0], # 1
              [0, 1, 0, 0, 7, 0], # 2
-             [11,0, 0, 0, 2, 0], # 3
+             [9 ,0, 0, 0, 2, 0], # 3
              [0, 3, 7, 2, 0, 2], # 4
              [0, 0, 0, 0, 2, 0]] # 5
 
@@ -72,4 +72,23 @@ if __name__ == "__main__":
     for distance in result:
         print(distance)
 
-        
+
+    graph = [(0, 1, 4),
+             (0, 3, 9),
+             (1, 2, 1),
+             (1, 4, 3),
+             (2, 4, 7),
+             (3, 4, 1),
+             (4, 5, 2)]
+
+    print('before:')
+    for edge in graph:
+        print(edge)
+
+    result = kruskal(graph, nodes_num=6)
+
+    print("mst:")
+    for edge in result:
+        print(edge)
+
+    
