@@ -68,13 +68,14 @@ if __name__ == "__main__":
 
     print()
     print('--------------- Shortest path problem ---------------------- ')
+    print(g_str)
     result = dijkstra(graph, 0)
-    print('1. Dijkstra:')
+    print('\n1. Dijkstra:')
     print('0 - ', result)
     print()
 
     result = floyd_warshall(graph)
-    print('2. Floyd Warshall:')
+    print('\n2. Floyd Warshall:')
     for i, distance in enumerate(result):
         print(i, ' - ', distance)
     print()
@@ -89,17 +90,20 @@ if __name__ == "__main__":
              (3, 4, 1),
              (4, 5, 2)]
 
+
+
     print('before:')
+    print(g_str, end='\n\n')
     for edge in graph1:
         print(edge)
 
     result = prim_mst(graph)
-    print('1. Prim:')
+    print('\n1. Prim:')
     for edge in result:
         print(edge)
 
     result = kruskal_mst(graph1, nodes_num=6)
 
-    print("2. Kruskal:")
+    print("\n2. Kruskal:")
     for edge in result:
         print(edge)
