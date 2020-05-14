@@ -130,7 +130,6 @@ def kosaraju(graph):
 
     tmp_graph = _matrix2lists(graph)
     while not all(visited):
-        i = visited.index(False)
         i = max(loc for loc, val in enumerate(visited) if val == False)
         stack.remove(i)
         if not visited[i]:
