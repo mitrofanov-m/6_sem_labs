@@ -1,4 +1,5 @@
 from graph_1 import *
+from graph_2 import *
 
 
 class bcolors:
@@ -38,12 +39,13 @@ if __name__ == "__main__":
              [1, 4],        # 2
              [0, 4],        # 3
              [1, 3, 2, 5],  # 4
-             [4]]           # 5
+             [4],           # 5
+             []]            # 6
 
     print('--------------- Graph search algorithms ---------------------- ')
 
     print('1. BFS')
-    result = bfs(graph, 0)
+    result = bfs(graph, 6)
     print_g(g_str, result)
 
     print('2. DFS')
@@ -107,3 +109,44 @@ if __name__ == "__main__":
     print("\n2. Kruskal:")
     for edge in result:
         print(edge)
+
+    print('--------------- 5.b Lab ---------------------- ')
+
+    graph_1 = [[0, 1, 0, 0, 1],
+               [1, 0, 1, 1, 1],
+               [0, 1, 0, 1, 0],
+               [0, 1, 1, 0, 0],
+               [1, 1, 0, 0, 0]]
+    graph_2 = deepcopy(graph_1)
+
+    graph_bad = [[0, 1, 0, 1, 0],
+                 [1, 0, 1, 0, 1],
+                 [0, 1, 0, 1, 1],
+                 [1, 1, 1, 0, 0],
+                 [0, 0, 1, 0, 0]]
+
+    print("\n1. Euler:")
+    print(' Correct:    ')
+    print(euler(graph_1, 0))
+
+    print(' Incorrect:')
+    euler(graph_bad, 0)
+
+    print("\n2. Fleury:")
+    print(fleury(graph_2, 0))
+
+    print("\n3. Tarjan:")
+    print(tarjan(graph_1))
+
+    graph_3 = [[0, 0, 1, 1, 0],
+               [1, 0, 0, 0, 0],
+               [0, 1, 0, 0, 0],
+               [0, 0, 0, 0, 1],
+               [0, 0, 0, 0, 0]]
+
+
+    result = kosaraju(graph_3)
+
+    print("\n4. Kosaraju:")
+    for i in result:
+        print(i)

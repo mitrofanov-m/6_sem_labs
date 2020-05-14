@@ -61,7 +61,6 @@ def _correct_edge(graph, current, next):
         return True
 
 
-
 def _fleury_path_of(graph, current, result):
     nearest_edges_indices = \
         (i for i, _ in enumerate(graph) if graph[current][i] > 0)
@@ -81,22 +80,59 @@ def fleury(graph, first_vertex):
     _fleury_path_of(graph, first_vertex, result)
     return result
 
+# ----------------------------------------------
+
+def _dfs_inv(graph, current, stack, visited):
+    visited[current] = True
+
+    nearest_edges_indices = \
+        (i for i, _ in enumerate(graph) if graph[current][i] > 0)
+    for next in nearest_edges_indices:
+        if not visited[next]:
+            _dfs_inv(graph, next, stack, visited)
+    stack.insert(0, current)
 
 
-if __name__ == '__main__':
-    graph_1 = [[0, 1, 0, 0, 1],
-               [1, 0, 1, 1, 1],
-               [0, 1, 0, 1, 0],
-               [0, 1, 1, 0, 0],
-               [1, 1, 0, 0, 0]]
-    graph_2 = deepcopy(graph_1)
+def tarjan(graph):
+    visited = [False] * len(graph)
+    stack = []
 
-    graph_bad = [[0, 1, 0, 1, 0],
-               [1, 0, 1, 0, 1],
-               [0, 1, 0, 1, 1],
-               [1, 1, 1, 0, 0],
-               [0, 0, 1, 0, 0]]
+    for i, _ in enumerate(graph):
+        if visited[i] == False:
+            _dfs_inv(graph, i, stack, visited)
 
-    print(euler(graph_1, 0))
-    print(fleury(graph_2, 0))
-    print(euler(graph_bad, 0))
+    return stack
+
+# ----------------------------------------------
+
+def _transpose(graph):
+    T = deepcopy(graph)
+    n = len(graph)
+
+    for i in range(n):
+        for j in range(n):
+            T[j][i] = graph[i][j]
+
+    return T
+
+
+def kosaraju(graph):
+    visited = [False] * len(graph)
+    stack = []
+
+    transposed = _transpose(graph)
+    for i, _ in enumerate(graph):
+        if visited[i] == False:
+            _dfs_inv(transposed, i, stack, visited)
+
+    visited = [False] * len(graph)
+    result = []
+
+    tmp_graph = _matrix2lists(graph)
+    while not all(visited):
+        i = visited.index(False)
+        i = max(loc for loc, val in enumerate(visited) if val == False)
+        stack.remove(i)
+        if not visited[i]:
+            result.append(dfs(tmp_graph, i, visited=visited))
+    return result
